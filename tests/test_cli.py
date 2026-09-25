@@ -68,7 +68,7 @@ def unset_envvars(monkeypatch: MonkeyPatch):
         "NO_COLOR",
         "TERM",
         "WEBDAV_USER",
-        "WEBDAV_PASSWORD"
+        "WEBDAV_PASSWORD",
     ]
     for envvar in envvars:
         monkeypatch.delenv(envvar, raising=False)
@@ -707,22 +707,37 @@ def test_auth(monkeypatch: MonkeyPatch):
     monkeypatch.setenv("WEBDAV_PASSWORD", "env_pwd")
     assert Command(ns).auth == ("env_user", "env_pwd")
     # CLI args take precedence over env vars
-    ns = Namespace(endpoint_url="http://server.com", user="cli_user", password="cli_pwd")
+    ns = Namespace(
+        endpoint_url="http://server.com", user="cli_user", password="cli_pwd"
+    )
     assert Command(ns).auth == ("cli_user", "cli_pwd")
     # URL credentials take precedence over env vars
-    ns = Namespace(endpoint_url="http://url_user:url_pwd@server.com", user=None, password=None)
+    ns = Namespace(
+        endpoint_url="http://url_user:url_pwd@server.com", user=None, password=None
+    )
     assert Command(ns).auth == ("url_user", "url_pwd")
     # CLI args take precedence over URL credentials
-    ns = Namespace(endpoint_url="http://url_user:url_pwd@server.com", user="cli_user", password="cli_pwd")
+    ns = Namespace(
+        endpoint_url="http://url_user:url_pwd@server.com",
+        user="cli_user",
+        password="cli_pwd",
+    )
     assert Command(ns).auth == ("cli_user", "cli_pwd")
     # Mixed: CLI user, URL password
-    ns = Namespace(endpoint_url="http://url_user:url_pwd@server.com", user="cli_user", password=None)
+    ns = Namespace(
+        endpoint_url="http://url_user:url_pwd@server.com",
+        user="cli_user",
+        password=None,
+    )
     assert Command(ns).auth == ("cli_user", "url_pwd")
     # Mixed: URL user, CLI password
-    ns = Namespace(endpoint_url="http://url_user:url_pwd@server.com", user=None, password="cli_pwd")
+    ns = Namespace(
+        endpoint_url="http://url_user:url_pwd@server.com", user=None, password="cli_pwd"
+    )
     assert Command(ns).auth == ("url_user", "cli_pwd")
     monkeypatch.delenv("WEBDAV_USER")
     monkeypatch.delenv("WEBDAV_PASSWORD")
+
 
 def test_main():
     """Test main command line entrypoint."""

@@ -365,8 +365,10 @@ class Client:
             http_resp.raise_for_status()
         except HTTPStatusError as exc:
             # handle 301 (moved permanently) by retrying with trailing slash
-            if (http_resp.status_code == HTTPStatus.MOVED_PERMANENTLY
-                and not add_trailing_slash):
+            if (
+                http_resp.status_code == HTTPStatus.MOVED_PERMANENTLY
+                and not add_trailing_slash
+            ):
                 return self._request(method, path, True, **kwargs)
             raise HTTPError(http_resp) from exc
 

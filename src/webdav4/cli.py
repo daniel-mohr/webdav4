@@ -503,16 +503,8 @@ def prepare_url_auth(
         )
 
     url_obj = URL(process_url(url))
-    user = (
-        args.user
-        or url_obj.username
-        or os.getenv("WEBDAV_USER")
-    )
-    password = (
-        args.password
-        or url_obj.password
-        or os.getenv("WEBDAV_PASSWORD")
-    )
+    user = args.user or url_obj.username or os.getenv("WEBDAV_USER")
+    password = args.password or url_obj.password or os.getenv("WEBDAV_PASSWORD")
 
     if user and password:
         auth = user, password
@@ -946,16 +938,16 @@ def get_parser() -> Tuple["ArgumentParser", Dict[str, "ArgumentParser"]]:
         default=None,
     )
     parser.add_argument(
-        "--user", "-u",
-        help="Account Username. "
-        "Can also be specified through WEBDAV_USER envvar.",
-        default=None, required=False
+        "--user",
+        "-u",
+        help="Account Username. Can also be specified through WEBDAV_USER envvar.",
+        default=None,
+        required=False,
     )
     parser.add_argument(
         "--password",
         "-p",
-        help="Account Password. "
-        "Can also be specified through WEBDAV_PASSWORD envvar.",
+        help="Account Password. Can also be specified through WEBDAV_PASSWORD envvar.",
         default=None,
         required=False,
     )
