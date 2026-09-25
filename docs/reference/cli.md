@@ -16,14 +16,26 @@ pip install -U "webdav4[fsspec]"
     export WEBDAV_ENDPOINT_URL="https://user:password@webdav.server.org/remote.php/dav/files/user"
     ```
 - `--user`: (Optional) Provide username of the account.
-    Can also be specified in the url itself in `--endpoint-url` or through environment variable.
+    Can also be specified in the url itself in `--endpoint-url` or through
+    the `WEBDAV_USER` environment.
+    Precedence: `--user` > url in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `WEBDAV_USER`
 - `--password`: (Optional) Provide password for the account.
-      Can also be specified in the url itself in `--endpoint-url` or through environment variable.
+   Can also be specified in the url itself in `--endpoint-url` or through
+   the `WEBDAV_PASSWORD` environment variable.
+   Precedence: `--password` > url in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `WEBDAV_PASSWORD`
+
+    ```shell
+    export WEBDAV_USER="user"
+    export WEBDAV_PASSWORD="password"
+    ```
 - `--verbose`: Provides more information and traceback on error.
 - `--help`: Shows help message and exits.
 
 > Note that all the arguments are expected to follow after `dav` command.
 > Example: `dav --user user ls`.
+
+> Note that if no user and password are provided through any of the above
+> methods, no authentication will be used.
 
 ## Examples:
 

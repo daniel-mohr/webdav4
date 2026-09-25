@@ -485,9 +485,11 @@ def process_url(url: str) -> str:
 def prepare_url_auth(
     args: Namespace,
 ) -> Tuple[urls.URL, Optional[Tuple[str, str]]]:
-    """Process url and auth from the given arguments or from the envvar.
+    """Process url and auth from CLI args, url, or env vars.
 
-    That includes using user and password from url itself.
+    Precedence for user: --user > user in url > WEBDAV_USER env var
+    Precedence for password: --password > password in url > WEBDAV_PASSWORD
+    env var
     """
     url = args.endpoint_url
     if not url:
@@ -501,18 +503,16 @@ def prepare_url_auth(
         )
 
     url_obj = URL(process_url(url))
-    user, password = None, None
-    auth = None
-
-    if url_obj.username:
-        user = url_obj.username
-    elif args.user:
-        user = args.user
-
-    if url_obj.password:
-        password = url_obj.password
-    elif args.password:
-        password = args.password
+    user = (
+        args.user
+        or url_obj.username
+        or os.getenv("WEBDAV_USER")
+    )
+    password = (
+        args.password
+        or url_obj.password
+        or os.getenv("WEBDAV_PASSWORD")
+    )
 
     if user and password:
         auth = user, password
@@ -946,12 +946,16 @@ def get_parser() -> Tuple["ArgumentParser", Dict[str, "ArgumentParser"]]:
         default=None,
     )
     parser.add_argument(
-        "--user", "-u", help="Account Username", default=None, required=False
+        "--user", "-u",
+        help="Account Username. "
+        "Can also be specified through WEBDAV_USER envvar.",
+        default=None, required=False
     )
     parser.add_argument(
         "--password",
         "-p",
-        help="Account Password",
+        help="Account Password. "
+        "Can also be specified through WEBDAV_PASSWORD envvar.",
         default=None,
         required=False,
     )
