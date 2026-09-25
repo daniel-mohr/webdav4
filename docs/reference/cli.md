@@ -9,7 +9,7 @@ pip install -U "webdav4[fsspec]"
 ```
 
 ## Common arguments
-- `--endpoint-url`: Path to the server/hostname. Can also be specified through
+- `--endpoint-url`: URL of the server/hostname. Can also be specified through
   `WEBDAV_ENDPOINT_URL` environment variable (and the url can contain password and user information as well).
 
     ```shell
@@ -17,12 +17,12 @@ pip install -U "webdav4[fsspec]"
     ```
 - `--user`: (Optional) Provide username of the account.
     Can also be specified in the url itself in `--endpoint-url` or through
-    the `WEBDAV_USER` environment.
-    Precedence: `--user` > url in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `WEBDAV_USER`
+    the `WEBDAV_USER` environment variable.
+    Precedence: user in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `--user` > `WEBDAV_USER`
 - `--password`: (Optional) Provide password for the account.
    Can also be specified in the url itself in `--endpoint-url` or through
    the `WEBDAV_PASSWORD` environment variable.
-   Precedence: `--password` > url in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `WEBDAV_PASSWORD`
+   Precedence: password in `--endpoint-url`/`WEBDAV_ENDPOINT_URL` > `--password` > `WEBDAV_PASSWORD`
 
     ```shell
     export WEBDAV_USER="user"

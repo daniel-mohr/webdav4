@@ -716,25 +716,20 @@ def test_auth(monkeypatch: MonkeyPatch):
         endpoint_url="http://url_user:url_pwd@server.com", user=None, password=None
     )
     assert Command(ns).auth == ("url_user", "url_pwd")
-    # CLI args take precedence over URL credentials
+    # URL credentials take precedence over CLI args
     ns = Namespace(
         endpoint_url="http://url_user:url_pwd@server.com",
         user="cli_user",
         password="cli_pwd",
     )
-    assert Command(ns).auth == ("cli_user", "cli_pwd")
-    # Mixed: CLI user, URL password
+    assert Command(ns).auth == ("url_user", "url_pwd")
+    # No URL credentials, CLI args win
     ns = Namespace(
-        endpoint_url="http://url_user:url_pwd@server.com",
+        endpoint_url="http://server.com",
         user="cli_user",
-        password=None,
+        password="cli_pwd",
     )
-    assert Command(ns).auth == ("cli_user", "url_pwd")
-    # Mixed: URL user, CLI password
-    ns = Namespace(
-        endpoint_url="http://url_user:url_pwd@server.com", user=None, password="cli_pwd"
-    )
-    assert Command(ns).auth == ("url_user", "cli_pwd")
+    assert Command(ns).auth == ("cli_user", "cli_pwd")
     monkeypatch.delenv("WEBDAV_USER")
     monkeypatch.delenv("WEBDAV_PASSWORD")
 

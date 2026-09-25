@@ -487,9 +487,8 @@ def prepare_url_auth(
 ) -> Tuple[urls.URL, Optional[Tuple[str, str]]]:
     """Process url and auth from CLI args, url, or env vars.
 
-    Precedence for user: --user > user in url > WEBDAV_USER env var
-    Precedence for password: --password > password in url > WEBDAV_PASSWORD
-    env var
+    Precedence for user: user in url > --user > WEBDAV_USER env var
+    Precedence for password: password in url > --password > WEBDAV_PASSWORD env var
     """
     url = args.endpoint_url
     if not url:
@@ -503,9 +502,10 @@ def prepare_url_auth(
         )
 
     url_obj = URL(process_url(url))
-    user = args.user or url_obj.username or os.getenv("WEBDAV_USER")
-    password = args.password or url_obj.password or os.getenv("WEBDAV_PASSWORD")
+    user = url_obj.username or args.user or os.getenv("WEBDAV_USER")
+    password = url_obj.password or args.password or os.getenv("WEBDAV_PASSWORD")
 
+    auth = None
     if user and password:
         auth = user, password
 
